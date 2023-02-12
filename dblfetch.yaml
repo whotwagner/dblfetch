@@ -1,0 +1,27 @@
+timeout: 
+blockaction: "shorewall blacklist ${IP} timeout ${TIMEOUT}"
+
+blacklists:
+  - name: spamhaus-drop
+    url: http://www.spamhaus.org/drop/drop.txt
+    timeout: 1d
+
+  - name: spamhaus-edrop
+    url: http://www.spamhaus.org/drop/edrop.txt
+    timeout: 1d
+
+  - name: blocklist_de-apache
+    url: http://lists.blocklist.de/lists/apache.txt
+    timeout: 15m
+
+  - name: blocklist_de-imap
+    url: http://lists.blocklist.de/lists/imap.txt
+    timeout: 15m
+
+  - name: blocklist_de-mail
+    url: http://lists.blocklist.de/lists/mail.txt
+    timeout: 15m
+
+  - name: blocklist_de-ssh
+    url: http://lists.blocklist.de/lists/ssh.txt
+    timeout: 15m
