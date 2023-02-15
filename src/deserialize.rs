@@ -5,6 +5,8 @@ use serde::Deserialize;
 use std::path::Path;
 use std::env;
 
+pub mod downlister;
+
 #[derive(Deserialize, PartialEq, Debug)]
 pub struct Config {
     timeout: Option<String>,
@@ -35,15 +37,15 @@ pub fn load_file(file: &str) -> Result<(), serde_yaml::Error>  {
     };
 
     let cachedir_path = default_cachedir(cachedir);
+    let cp = cachedir_path.clone();
 
     println!("Cache-Dir: {}", cachedir_path);
 
-    fs::create_dir_all(cachedir_path).unwrap_or_else(|e| panic!("Error creating dir: {}", e));
-
-
+    fs::create_dir_all(cp).unwrap_or_else(|e| panic!("Error creating dir: {}", e));
 
     for dbl in ymlconfig.blacklists {
         println!("Got: {}", dbl.name);
+        downlister::download(dbl.name, dbl.url, &cachedir_path);
     }
 
     Ok(())
