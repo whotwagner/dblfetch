@@ -24,4 +24,4 @@ blacklists:
 
   - name: blocklist_de-ssh
     url: http://lists.blocklist.de/lists/ssh.txt
-    timeout: 15m
+    timeout: "15"

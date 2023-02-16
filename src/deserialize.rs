@@ -5,6 +5,10 @@ use serde::Deserialize;
 use std::path::Path;
 use std::env;
 
+extern crate simplelog;
+
+use simplelog::*;
+
 pub mod downlister;
 
 #[derive(Deserialize, PartialEq, Debug)]
@@ -39,24 +43,26 @@ pub fn load_file(file: &str) -> Result<(), serde_yaml::Error>  {
     let cachedir_path = default_cachedir(cachedir);
     let cp = cachedir_path.clone();
 
-    println!("Cache-Dir: {}", cachedir_path);
+    info!("Cache-Dir: {}", cachedir_path);
 
     fs::create_dir_all(cp).unwrap_or_else(|e| panic!("Error creating dir: {}", e));
 
     for dbl in ymlconfig.blacklists {
-        println!("Got: {}", dbl.name);
-        downlister::download(dbl.name, dbl.url, &cachedir_path);
+        info!("Got: {}", dbl.name);
+        let timeout = match dbl.timeout {
+            Some(x) => x,
+            None => "24h".to_string()
+        };
+        downlister::download(dbl.name, dbl.url, &cachedir_path, &timeout);
     }
 
     Ok(())
 }
 
 fn default_cachedir(file: &str) -> String {
-    let home = "HOME";
-    
-    let homepath = match env::var(home) {
+    let homepath = match env::var("HOME") {
         Ok(val) => val,
-        Err(e) => panic!("Error: could not find {}: {}", home, e),
+        Err(e) => panic!("Error: could not find {}: {}", "HOME", e),
     };
 
     let fullpath: String = Path::new(&homepath).join(file).into_os_string().into_string().unwrap();

@@ -1,4 +1,8 @@
+extern crate simplelog;
 use clap::Parser;
+
+use simplelog::*;
+
 
 pub mod deserialize;
 
@@ -13,15 +17,21 @@ struct Args {
 fn main() {
     let _args = Args::parse();
 
+    CombinedLogger::init(
+        vec![
+            TermLogger::new(LevelFilter::Info, Config::default(), TerminalMode::Mixed, ColorChoice::Auto)
+        ]
+    ).unwrap();
+
+    info!("I do stuff");
+
     match _args.config {
         Some(x) => {
             match deserialize::load_file(x.as_str()) {
                 Ok(s) => s,
-                Err(e) => println!("Error: {}", e)
+                Err(e) => error!("Error: {}", e)
             };
         },
-        None => println!("Crap! Not again.")
+        None => error!("Crap! Not again.")
     }
 }
-
-
