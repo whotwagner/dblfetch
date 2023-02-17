@@ -43,12 +43,12 @@ pub fn load_file(file: &str) -> Result<(), serde_yaml::Error>  {
     let cachedir_path = default_cachedir(cachedir);
     let cp = cachedir_path.clone();
 
-    info!("Cache-Dir: {}", cachedir_path);
+    debug!("Cache-Dir: {}", cachedir_path);
 
     fs::create_dir_all(cp).unwrap_or_else(|e| panic!("Error creating dir: {}", e));
 
     for dbl in ymlconfig.blacklists {
-        info!("Got: {}", dbl.name);
+        debug!("Got: {}", dbl.name);
         let timeout = match dbl.timeout {
             Some(x) => x,
             None => "24h".to_string()

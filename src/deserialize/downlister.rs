@@ -29,20 +29,17 @@ fn timeconvert(time: &String) -> u64 {
     };
 
     let value = cap_val.to_string().parse::<u64>().unwrap();
-    let mut multi: u64 = 0;
     if &cap_unit == &"m" {
-        multi = 60;
+        return value * 60;
     } else if &cap_unit == &"s" {
-        multi = 1;
+        return value;
     } else if &cap_unit == &"h" {
-        multi = 60 * 60;
+        return value * 60 * 60;
     } else if &cap_unit == &"d" {
-        multi = 60 * 60 * 24;
+        return value * 60 * 60 * 24;
     } else {
-        multi = 1;
+        return value;
     }
-
-    return value * multi;
 }
 
 fn is_renewable(filepath: &Path, timeout: &String) -> bool {
@@ -57,37 +54,45 @@ fn is_renewable(filepath: &Path, timeout: &String) -> bool {
     }
 
     if delta > t {
-        info!("Time for renewal. delta is {} seconds", delta);
+        debug!("Time for renewal. delta is {} seconds", delta);
         return true;
     } else {
-        info!("Renewal in {} seconds", t - delta);
+        debug!("Renewal in {} seconds", t - delta);
         return false;
     }
 
 }
 
 fn get_from_url(url: String, filepath: &Path) {
-    let mut result = reqwest::blocking::get(url).unwrap();
+    let result = reqwest::blocking::get(url).unwrap();
     let body = match result.text() {
         Ok(x) => x,
         Err(e) => { panic!("Download failed {:?}", e) }
     };
-    let prefilter = Regex::new(r"^\s*([0-9\.:]+)").unwrap();
+    let prefilter = Regex::new(r"^\s*([0-9\.:/]+)").unwrap();
 
     for line in body.split("\n") {
-        let cap = prefilter.captures(line).unwrap();
+        match prefilter.captures(line) {
+            Some(x) => info!("{}", x.get(0).unwrap().as_str()),
+            None => debug!("ignorered: {}", line)
+        }
     }
 
     let mut output = File::create(filepath).expect("whoopsi");
-    write!(output, "{}", &body);
+    write!(output, "{}", &body).unwrap_or_else(|error| { 
+        warn!("Unable to write file {filepath:?}: {error:?}");
+    });
 }
 
 pub fn download(name: String, url: String, cachedir: &String, timeout: &String) {
-    info!("download...{}", name);
+    info!("processing {}", name);
     let filepath = Path::new(cachedir).join(name);
     if filepath.exists() {
         if is_renewable(&filepath, timeout) {
-            info!("Ok. I'll do it!");
+            info!("Delete file first");
+            fs::remove_file(&filepath).unwrap_or_else(|error| {
+                warn!("Unable to delete file {filepath:?}: {error:?}");
+            });
             get_from_url(url, &filepath);
         } else {
             info!("Nothing to renew. For now..");

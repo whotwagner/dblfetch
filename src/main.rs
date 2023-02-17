@@ -19,11 +19,9 @@ fn main() {
 
     CombinedLogger::init(
         vec![
-            TermLogger::new(LevelFilter::Info, Config::default(), TerminalMode::Mixed, ColorChoice::Auto)
+            TermLogger::new(LevelFilter::Debug, Config::default(), TerminalMode::Mixed, ColorChoice::Auto)
         ]
     ).unwrap();
-
-    info!("I do stuff");
 
     match _args.config {
         Some(x) => {
