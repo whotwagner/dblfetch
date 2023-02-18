@@ -1,7 +1,6 @@
 use std::fs::File;
 use std::fs;
 use std::io::prelude::*;
-use serde::Deserialize;
 use std::path::Path;
 use std::env;
 
@@ -11,20 +10,7 @@ use simplelog::*;
 
 pub mod downlister;
 
-#[derive(Deserialize, PartialEq, Debug)]
-pub struct Config {
-    timeout: Option<String>,
-    cachedir: Option<String>,
-    blockaction: String,
-    blacklists: Vec<Dbl>
-}
-
-#[derive(Deserialize, PartialEq, Debug)]
-pub struct Dbl {
-    name: String,
-    url: String,
-    timeout: Option<String>
-}
+pub mod config;
 
 pub fn load_file(file: &str) -> Result<(), serde_yaml::Error>  {
     let mut file = File::open(file).expect("Unable to open file");
@@ -33,7 +19,7 @@ pub fn load_file(file: &str) -> Result<(), serde_yaml::Error>  {
     file.read_to_string(&mut yaml)
         .expect("Unable to read file");
 
-    let ymlconfig: Config = serde_yaml::from_str(&yaml)?;
+    let ymlconfig: config::Config = serde_yaml::from_str(&yaml)?;
 
     let cachedir = match ymlconfig.cachedir {
         Some(ref x) => x,
