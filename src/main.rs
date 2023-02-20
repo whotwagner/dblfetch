@@ -1,9 +1,6 @@
 extern crate simplelog;
 use clap::Parser;
-use config::Config
-
 use simplelog::*;
-
 
 pub mod deserialize;
 

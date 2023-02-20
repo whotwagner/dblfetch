@@ -39,7 +39,7 @@ pub fn load_file(file: &str) -> Result<(), serde_yaml::Error>  {
             Some(x) => x,
             None => "24h".to_string()
         };
-        downlister::download(dbl.name, dbl.url, &cachedir_path, &timeout);
+        downlister::download(dbl.name, dbl.url, &cachedir_path, &timeout, &ymlconfig.blockaction);
     }
 
     Ok(())

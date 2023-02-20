@@ -63,7 +63,7 @@ fn is_renewable(filepath: &Path, timeout: &String) -> bool {
 
 }
 
-fn get_from_url(url: String, filepath: &Path) {
+fn get_from_url(url: String, filepath: &Path, blockaction: &String, timeout: &String) {
     let result = reqwest::blocking::get(url).unwrap();
     let body = match result.text() {
         Ok(x) => x,
@@ -73,7 +73,7 @@ fn get_from_url(url: String, filepath: &Path) {
 
     for line in body.split("\n") {
         match prefilter.captures(line) {
-            Some(x) => info!("{}", x.get(0).unwrap().as_str()),
+            Some(x) => info!("{}", blockaction.replace("${IP}",x.get(0).unwrap().as_str()).replace("${TIMEOUT}","yo")),
             None => debug!("ignorered: {}", line)
         }
     }
@@ -84,7 +84,7 @@ fn get_from_url(url: String, filepath: &Path) {
     });
 }
 
-pub fn download(name: String, url: String, cachedir: &String, timeout: &String) {
+pub fn download(name: String, url: String, cachedir: &String, timeout: &String, blockaction: &String) {
     info!("processing {}", name);
     let filepath = Path::new(cachedir).join(name);
     if filepath.exists() {
@@ -93,13 +93,13 @@ pub fn download(name: String, url: String, cachedir: &String, timeout: &String) 
             fs::remove_file(&filepath).unwrap_or_else(|error| {
                 warn!("Unable to delete file {filepath:?}: {error:?}");
             });
-            get_from_url(url, &filepath);
+            get_from_url(url, &filepath, &blockaction, &timeout);
         } else {
             info!("Nothing to renew. For now..");
         }
     }
     else {
         info!("so new");
-        get_from_url(url, &filepath);
+        get_from_url(url, &filepath, &blockaction, &timeout);
     }
 }
