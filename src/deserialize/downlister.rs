@@ -63,6 +63,11 @@ fn is_renewable(filepath: &Path, timeout: &String) -> bool {
 
 }
 
+fn do_action(ip: &str, blockaction: &String, timeout: &String) {
+    let action: String = blockaction.replace("${IP}",ip);
+    info!("{}", action.replace("${TIMEOUT}",timeout));
+}
+
 fn get_from_url(url: String, filepath: &Path, blockaction: &String, timeout: &String) {
     let result = reqwest::blocking::get(url).unwrap();
     let body = match result.text() {
@@ -73,7 +78,7 @@ fn get_from_url(url: String, filepath: &Path, blockaction: &String, timeout: &St
 
     for line in body.split("\n") {
         match prefilter.captures(line) {
-            Some(x) => info!("{}", blockaction.replace("${IP}",x.get(0).unwrap().as_str()).replace("${TIMEOUT}","yo")),
+            Some(x) => do_action(x.get(0).unwrap().as_str(), &blockaction, &timeout),
             None => debug!("ignorered: {}", line)
         }
     }
