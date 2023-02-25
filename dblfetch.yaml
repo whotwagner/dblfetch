@@ -1,5 +1,5 @@
 timeout: 
-blockaction: "shorewall blacklist ${IP} timeout ${TIMEOUT}"
+blockaction: "echo shorewall blacklist ${IP} timeout ${TIMEOUT}"
 
 blacklists:
   - name: spamhaus-drop
