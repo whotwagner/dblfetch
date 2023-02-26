@@ -1,6 +1,7 @@
 extern crate simplelog;
 use clap::Parser;
 use simplelog::*;
+use std::fs::File;
 
 pub mod deserialize;
 
@@ -17,7 +18,8 @@ fn main() {
 
     CombinedLogger::init(
         vec![
-            TermLogger::new(LevelFilter::Debug, Config::default(), TerminalMode::Mixed, ColorChoice::Auto)
+            TermLogger::new(LevelFilter::Error, Config::default(), TerminalMode::Mixed, ColorChoice::Auto),
+            WriteLogger::new(LevelFilter::Info, Config::default(), File::create("dblfetch.log").unwrap())
         ]
     ).unwrap();
 

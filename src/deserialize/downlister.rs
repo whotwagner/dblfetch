@@ -66,13 +66,13 @@ fn is_renewable(filepath: &Path, timeout: &String) -> bool {
 
 fn do_action(ip: &str, blockaction: &String, timeout: &String) {
     let action: String = blockaction.replace("${IP}",ip);
-//    info!("{}", action.replace("${TIMEOUT}",timeout));
+    debug!("{}", action.replace("${TIMEOUT}",timeout));
     let output = Command::new("sh")
             .arg("-c")
             .arg(action.replace("${TIMEOUT}",timeout))
             .output()
             .expect("failed to execute process");
-    info!("{:?}", String::from_utf8(output.stdout));
+    debug!("{:?}", String::from_utf8(output.stdout));
 }
 
 fn get_from_url(url: String, filepath: &Path, blockaction: &String, timeout: &String) {
