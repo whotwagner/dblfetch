@@ -8,7 +8,7 @@ pub mod deserialize;
 #[derive(Parser, Debug)]
 #[command(author = "Wolfgang Hotwagner", version = "0.3", about, long_about = None)]
 struct Args {
-    #[arg(short = 'c', long, default_value = "./dblfetch.yaml")]
+    #[arg(short = 'c', long, default_value = "/etc/dblfetch.yaml")]
     /// Use this config-file
     config: Option<String>
 }
