@@ -6,7 +6,7 @@ use std::fs::File;
 pub mod deserialize;
 
 #[derive(Parser, Debug)]
-#[command(author = "Wolfgang Hotwagner", version = "0.1", about, long_about = None)]
+#[command(author = "Wolfgang Hotwagner", version = "0.3", about, long_about = None)]
 struct Args {
     #[arg(short = 'c', long, default_value = "./dblfetch.yaml")]
     /// Use this config-file
@@ -19,7 +19,7 @@ fn main() {
     CombinedLogger::init(
         vec![
             TermLogger::new(LevelFilter::Error, Config::default(), TerminalMode::Mixed, ColorChoice::Auto),
-            WriteLogger::new(LevelFilter::Info, Config::default(), File::create("dblfetch.log").unwrap())
+            WriteLogger::new(LevelFilter::Info, Config::default(), File::create("/var/log/dblfetch.log").unwrap())
         ]
     ).unwrap();
 
