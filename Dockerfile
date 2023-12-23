@@ -1,16 +1,15 @@
-FROM rust:latest as builder
+FROM rust:bullseye
 
 WORKDIR /myapp
 
-# COPY . .
+COPY . .
 # 
-# RUN cargo build --release
-# 
-# #CMD ["myapp"]
-# 
+# # 
+# CMD ["myapp"]
+# # 
 # FROM debian:bullseye-slim
 # 
 # WORKDIR /usr/src/myapp
-# copy --from=builder /usr/src/myapp/target/release/setup .
-# copy --from=builder /usr/src/myapp/target/release/bridge .
+# #copy --from=builder /myapp/target/release/setup .
+# copy --from=builder /myapp/target/release/bridge .
 # # CMD ["myapp"]

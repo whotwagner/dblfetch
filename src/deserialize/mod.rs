@@ -26,6 +26,8 @@ pub fn load_file(file: &str) -> Result<(), serde_yaml::Error>  {
         None => ".cache/dblfetch"
     };
 
+    let blockaction_v6 = ymlconfig.blockaction_v6.as_deref().unwrap_or("");
+
     let cachedir_path = default_cachedir(cachedir);
     let cp = cachedir_path.clone();
 
@@ -39,7 +41,7 @@ pub fn load_file(file: &str) -> Result<(), serde_yaml::Error>  {
             Some(x) => x,
             None => "24h".to_string()
         };
-        downlister::download(dbl.name, dbl.url, &cachedir_path, &timeout, &ymlconfig.blockaction);
+        downlister::download(dbl.name, dbl.url, &cachedir_path, &timeout, &ymlconfig.blockaction, &blockaction_v6.to_string());
     }
 
     Ok(())

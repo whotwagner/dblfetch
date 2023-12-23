@@ -5,6 +5,7 @@ pub struct Config {
 pub    timeout: Option<String>,
 pub    cachedir: Option<String>,
 pub    blockaction: String,
+pub    blockaction_v6: Option<String>,
 pub    blacklists: Vec<Dbl>
 }
 

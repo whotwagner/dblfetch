@@ -64,8 +64,9 @@ fn is_renewable(filepath: &Path, timeout: &String) -> bool {
 
 }
 
-fn do_action(ip: &str, blockaction: &String, timeout: &String) {
+fn do_action(ip: &str, blockaction: &String, blockaction_v6: &String, timeout: &String) {
     let action: String = blockaction.replace("${IP}",ip);
+    debug!("Blockaction6: {}", blockaction_v6);
     debug!("{}", action.replace("${TIMEOUT}",timeout));
     let output = Command::new("sh")
             .arg("-c")
@@ -75,7 +76,7 @@ fn do_action(ip: &str, blockaction: &String, timeout: &String) {
     debug!("{:?}", String::from_utf8(output.stdout));
 }
 
-fn get_from_url(url: String, filepath: &Path, blockaction: &String, timeout: &String) {
+fn get_from_url(url: String, filepath: &Path, blockaction: &String, blockaction_v6: &String, timeout: &String) {
     let result = reqwest::blocking::get(url).unwrap();
     let body = match result.text() {
         Ok(x) => x,
@@ -85,7 +86,7 @@ fn get_from_url(url: String, filepath: &Path, blockaction: &String, timeout: &St
 
     for line in body.split("\n") {
         match prefilter.captures(line) {
-            Some(x) => do_action(x.get(0).unwrap().as_str(), &blockaction, &timeout),
+            Some(x) => do_action(x.get(0).unwrap().as_str(), &blockaction, &blockaction_v6, &timeout),
             None => debug!("ignorered: {}", line)
         }
     }
@@ -96,7 +97,7 @@ fn get_from_url(url: String, filepath: &Path, blockaction: &String, timeout: &St
     });
 }
 
-pub fn download(name: String, url: String, cachedir: &String, timeout: &String, blockaction: &String) {
+pub fn download(name: String, url: String, cachedir: &String, timeout: &String, blockaction: &String, blockaction_v6: &String) {
     info!("processing {}", name);
     let filepath = Path::new(cachedir).join(name);
     if filepath.exists() {
@@ -105,13 +106,13 @@ pub fn download(name: String, url: String, cachedir: &String, timeout: &String, 
             fs::remove_file(&filepath).unwrap_or_else(|error| {
                 warn!("Unable to delete file {filepath:?}: {error:?}");
             });
-            get_from_url(url, &filepath, &blockaction, &timeout);
+            get_from_url(url, &filepath, &blockaction, &blockaction_v6, &timeout);
         } else {
             info!("Nothing to renew. For now..");
         }
     }
     else {
         info!("so new");
-        get_from_url(url, &filepath, &blockaction, &timeout);
+        get_from_url(url, &filepath, &blockaction, &blockaction_v6, &timeout);
     }
 }
