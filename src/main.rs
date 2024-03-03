@@ -19,7 +19,7 @@ fn main() {
     CombinedLogger::init(
         vec![
             TermLogger::new(LevelFilter::Error, Config::default(), TerminalMode::Mixed, ColorChoice::Auto),
-            WriteLogger::new(LevelFilter::Info, Config::default(), File::create("/var/log/dblfetch.log").unwrap())
+            WriteLogger::new(LevelFilter::Info, Config::default(), File::create("dblfetch.log").unwrap())
         ]
     ).unwrap();
 

@@ -6,6 +6,8 @@ use std::path::Path;
 use regex::Regex;
 use std::time::SystemTime;
 use std::process::Command;
+use std::str::FromStr;
+use std::net::{IpAddr};
 
 extern crate simplelog;
 
@@ -64,16 +66,33 @@ fn is_renewable(filepath: &Path, timeout: &String) -> bool {
 
 }
 
-fn do_action(ip: &str, blockaction: &String, blockaction_v6: &String, timeout: &String) {
+fn execute_action(ip: &str, blockaction: &String, timeout: &String) {
     let action: String = blockaction.replace("${IP}",ip);
-    debug!("Blockaction6: {}", blockaction_v6);
-    debug!("{}", action.replace("${TIMEOUT}",timeout));
+    info!("{}", action.replace("${TIMEOUT}",timeout));
     let output = Command::new("sh")
             .arg("-c")
             .arg(action.replace("${TIMEOUT}",timeout))
             .output()
             .expect("failed to execute process");
-    debug!("{:?}", String::from_utf8(output.stdout));
+    info!("{:?}", String::from_utf8(output.stdout));
+}
+
+fn ipv4_or_v6(addr: &IpAddr, ip: &str, blockaction: &String, blockaction_v6: &String, timeout: &String) {
+    if addr.is_ipv4() && &blockaction != &"" {
+        execute_action(ip, blockaction, timeout);
+    } else if addr.is_ipv6() && &blockaction_v6 != &"" {
+        execute_action(ip, blockaction_v6, timeout);
+    }
+}
+
+fn do_action(ip: &str, blockaction: &String, blockaction_v6: &String, timeout: &String) {
+    let addr_result = IpAddr::from_str(ip);
+    info!("IP: {}", ip);
+
+    match addr_result {
+        Ok(addr) => ipv4_or_v6(&addr, ip, blockaction, blockaction_v6, timeout),
+        Err(err) => error!("Error: {}: {}", err, ip),
+    };
 }
 
 fn get_from_url(url: String, filepath: &Path, blockaction: &String, blockaction_v6: &String, timeout: &String) {
@@ -82,9 +101,10 @@ fn get_from_url(url: String, filepath: &Path, blockaction: &String, blockaction_
         Ok(x) => x,
         Err(e) => { panic!("Download failed {:?}", e) }
     };
-    let prefilter = Regex::new(r"^\s*([0-9\.:/]+)").unwrap();
+    let prefilter = Regex::new(r"^\s*([0-9a-fA-F\.:/]+)").unwrap();
 
     for line in body.split("\n") {
+        debug!("Line {}", line);
         match prefilter.captures(line) {
             Some(x) => do_action(x.get(0).unwrap().as_str(), &blockaction, &blockaction_v6, &timeout),
             None => debug!("ignorered: {}", line)
