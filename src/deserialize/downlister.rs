@@ -7,7 +7,7 @@ use regex::Regex;
 use std::time::SystemTime;
 use std::process::Command;
 use std::str::FromStr;
-use std::net::{IpAddr};
+use cidr::IpCidr;
 
 extern crate simplelog;
 
@@ -68,16 +68,16 @@ fn is_renewable(filepath: &Path, timeout: &String) -> bool {
 
 fn execute_action(ip: &str, blockaction: &String, timeout: &String) {
     let action: String = blockaction.replace("${IP}",ip);
-    info!("{}", action.replace("${TIMEOUT}",timeout));
+    debug!("{}", action.replace("${TIMEOUT}",timeout));
     let output = Command::new("sh")
             .arg("-c")
             .arg(action.replace("${TIMEOUT}",timeout))
             .output()
             .expect("failed to execute process");
-    info!("{:?}", String::from_utf8(output.stdout));
+    debug!("{:?}", String::from_utf8(output.stdout));
 }
 
-fn ipv4_or_v6(addr: &IpAddr, ip: &str, blockaction: &String, blockaction_v6: &String, timeout: &String) {
+fn ipv4_or_v6(addr: &IpCidr, ip: &str, blockaction: &String, blockaction_v6: &String, timeout: &String) {
     if addr.is_ipv4() && &blockaction != &"" {
         execute_action(ip, blockaction, timeout);
     } else if addr.is_ipv6() && &blockaction_v6 != &"" {
@@ -86,7 +86,7 @@ fn ipv4_or_v6(addr: &IpAddr, ip: &str, blockaction: &String, blockaction_v6: &St
 }
 
 fn do_action(ip: &str, blockaction: &String, blockaction_v6: &String, timeout: &String) {
-    let addr_result = IpAddr::from_str(ip);
+    let addr_result = IpCidr::from_str(ip);
     info!("IP: {}", ip);
 
     match addr_result {
