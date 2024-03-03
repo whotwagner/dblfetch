@@ -87,7 +87,7 @@ fn ipv4_or_v6(addr: &IpCidr, ip: &str, blockaction: &String, blockaction_v6: &St
 
 fn do_action(ip: &str, blockaction: &String, blockaction_v6: &String, timeout: &String) {
     let addr_result = IpCidr::from_str(ip);
-    info!("IP: {}", ip);
+    debug!("IP: {}", ip);
 
     match addr_result {
         Ok(addr) => ipv4_or_v6(&addr, ip, blockaction, blockaction_v6, timeout),
