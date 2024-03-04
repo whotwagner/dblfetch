@@ -68,8 +68,8 @@ Set the following cronjob:
 */15 * * * * /usr/local/bin/dblfetch
 ```
 
-***Please note that it is recommended to execute dblfetch manually for the first time in order to find out how long it
-takes to run the task
+**Please note that it is recommended to execute dblfetch manually for the first time in order to find out how long it
+takes to run the task**
 
 # License
 
