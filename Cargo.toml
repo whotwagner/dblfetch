@@ -1,6 +1,6 @@
 [package]
 name = "dblfetch"
-version = "0.5.0"
+version = "0.5.1"
 authors = ["hoti <code@feedyourhead.at>"]
 edition = "2018"
 

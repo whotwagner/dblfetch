@@ -3,7 +3,7 @@ use clap::Parser;
 use simplelog::*;
 use std::fs::File;
 
-pub mod deserialize;
+pub mod dblfetch;
 
 #[derive(Parser, Debug)]
 #[command(author = "Wolfgang Hotwagner", version = "0.5", about, long_about = None)]
@@ -25,7 +25,7 @@ fn main() {
 
     match _args.config {
         Some(x) => {
-            match deserialize::load_file(x.as_str()) {
+            match dblfetch::load_file(x.as_str()) {
                 Ok(s) => s,
                 Err(e) => error!("Error: {}", e)
             };

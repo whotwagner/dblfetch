@@ -18,6 +18,20 @@ Use cargo to build a release
 cargo build -r
 ```
 
+## Using Docker
+
+First create a build-container:
+
+```
+$ docker build -t dblfetchbuilder .
+```
+
+Use this builder to compile the app:
+
+```
+$ docker run -v $PWD/.:/myapp --rm dblfetchbuilder cargo build -r
+```
+
 # Install
 
 Copy the binary to `$PATH`
