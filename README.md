@@ -10,6 +10,15 @@ addresses to ipsets. dblfetch distinguishes whether it is an ipv4 or ipv6 addres
 each ip version. All downloaded blacklists are stored in a cache which is only updated when the time for this cache has expired.
 In this way, downloads are optimised to a minimum.
 
+# Features
+
+* Use cache with timeouts
+* Allow seperated commands for IPv4 and IPv6
+* Write logs
+* Use yaml-config
+* Multiple sources
+* Use http-loader
+
 # Build
 
 Use cargo to build a release
