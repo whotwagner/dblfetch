@@ -15,7 +15,6 @@ In this way, downloads are optimised to a minimum.
 * Use cache with timeouts
 * Allow seperated commands for IPv4 and IPv6
 * Write logs
-* Use yaml-config
 * Multiple sources
 * Use http-loader
 
