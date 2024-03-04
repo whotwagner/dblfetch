@@ -68,10 +68,11 @@ fn is_renewable(filepath: &Path, timeout: &String) -> bool {
 
 fn execute_action(ip: &str, blockaction: &String, timeout: &String) {
     let action: String = blockaction.replace("${IP}",ip);
-    debug!("{}", action.replace("${TIMEOUT}",timeout));
+    let sec = timeconvert(timeout).to_string();
+    debug!("{}", action.replace("${TIMEOUT}", &sec));
     let output = Command::new("sh")
             .arg("-c")
-            .arg(action.replace("${TIMEOUT}",timeout))
+            .arg(action.replace("${TIMEOUT}", &sec))
             .output()
             .expect("failed to execute process");
     debug!("{:?}", String::from_utf8(output.stdout));
