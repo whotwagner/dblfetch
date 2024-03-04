@@ -1,4 +1,5 @@
-timeout: 
+# Default cachedir: $HOME/.cache/dblfetch
+# cachedir: /var/cache/dblfetch
 blockaction: "shorewall blacklist ${IP} timeout ${TIMEOUT}"
 blockaction_v6: "shorewall6 blacklist ${IP} timeout ${TIMEOUT}"
 
@@ -25,4 +26,4 @@ blacklists:
 
   - name: blocklist_de-ssh
     url: http://lists.blocklist.de/lists/ssh.txt
-    timeout: "15"
+    timeout: 15m
