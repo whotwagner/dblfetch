@@ -1,14 +1,14 @@
 # dblfetch
 
-Fetches dynamic blacklists from web-sources and executes commands with the ip-ranges.
+Fetches dynamic denylists from web sources and executes commands with the IP-ranges.
 
 # How it works
 
-dblfetch downloads blacklists or ipsets from web-sources and parses all ip-ranges(in cidr-format or single ip-addresses).
-These ip ranges are then used in commands that are executed by dblfetch. Typically, these are commands for adding
+dblfetch downloads denylists or ipsets from web-sources and parses all ip-ranges(in cidr-format or single ip-addresses).
+These IP ranges are then used in commands that are executed by dblfetch. Typically, these are commands for adding
 addresses to ipsets. dblfetch distinguishes whether it is an ipv4 or ipv6 address and executes different commands for
-each ip version. All downloaded blacklists are stored in a cache which is only updated when the time for this cache has expired.
-In this way, downloads are optimised to a minimum.
+each IP version. All downloaded denylists are stored in a cache, which is only updated when the time for this cache has expired.
+In this way, downloads are optimized to a minimum.
 
 # Features
 
