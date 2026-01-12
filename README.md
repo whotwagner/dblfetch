@@ -1,3 +1,7 @@
+> [!WARNING]  
+> This repository has been moved to [https://codeberg.org/whotwagner/dblfetch](https://codeberg.org/whotwagner/dblfetch). Please visit the new location for the latest updates.
+
+
 # dblfetch
 
 Fetches dynamic denylists from web sources and executes commands with the IP-ranges.
